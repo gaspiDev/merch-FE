@@ -3,5 +3,6 @@
 
 
 @theme {
-    --font-inter: 'Inter Variable', sans-serif;
+    --color-airbnb: #ff5a5f;
+    --color-beige: #fdfff3;
 }

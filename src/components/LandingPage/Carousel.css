@@ -1,0 +1,20 @@
+.swiper,
+.swiper-wrapper,
+.swiper-slide {
+    overflow: visible !important;
+}
+
+.swiper-pagination {
+  margin-top: 3rem !important;  /* pushes bullets further below slides */
+  position: relative;           /* keeps them below instead of overlapping */
+}
+.swiper-pagination-bullet {
+    background: #eceedf !important;
+    /* white background */
+    opacity: 1 !important;
+    /* make them fully visible */
+}
+
+.swiper-pagination-bullet-active {
+    background: #ff5a5f !important;
+}
