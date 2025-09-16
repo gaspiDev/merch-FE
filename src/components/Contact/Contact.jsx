@@ -1,205 +1,354 @@
 import { useState } from "react";
-import Modal from "../Modal";
-import { useNavigate } from "react-router";
-import { Loader } from "lucide-react"
+import { Plus, Trash2, Upload, MapPin, User, Building, Package, Mail, Phone } from "lucide-react";
 
-const Contact = () => {
+const ContactForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    orderDetails: [
-      { product_id: "Biromes", quantity: 30 },
-      { product_id: "Vasos termicos", quantity: 20 },
-      { product_id: "Agendas", quantity: 50 }
-    ]
+    contactName: '',
+    companyName: '',
+    companyLogo: null,
+    email: '',
+    phone: '',
+    deliveryLocation: '',
+    products: [{ name: '', quantity: 1 }],
+    additionalNotes: ''
   });
-  const [loading, setLoading] = useState(false)
 
-  const [openModal, setOpenModal] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleChange = (e) => {
+  // Handle input changes
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true)
-    try {
-      const response = await fetch("http://127.0.0.1:8000/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+  // Handle logo file upload
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    setFormData(prev => ({
+      ...prev,
+      companyLogo: file
+    }));
+  };
 
-      if (response.ok) {
-        setLoading(false)
-        setOpenModal(true)
-        setFormData({ name: "", email: "", company: "", orderDetails: [{ product_id: "Biromes", quantity: 30 }, { product_id: "Vasos termicos", quantity: 30 }, { product_id: "Agendas", quantity: 50 }] });
-      } else {
-        alert("Error al enviar el formulario.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Ocurrió un error al enviar.");
+  // Handle product changes
+  const handleProductChange = (index, field, value) => {
+    const updatedProducts = formData.products.map((product, i) =>
+      i === index ? { ...product, [field]: value } : product
+    );
+    setFormData(prev => ({
+      ...prev,
+      products: updatedProducts
+    }));
+  };
+
+  // Add new product
+  const addProduct = () => {
+    setFormData(prev => ({
+      ...prev,
+      products: [...prev.products, { name: '', quantity: 1 }]
+    }));
+  };
+
+  // Remove product
+  const removeProduct = (index) => {
+    if (formData.products.length > 1) {
+      const updatedProducts = formData.products.filter((_, i) => i !== index);
+      setFormData(prev => ({
+        ...prev,
+        products: updatedProducts
+      }));
     }
   };
 
-  const navigate = useNavigate();
+  // Handle form submission
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitMessage('');
 
-  const handleCloseModal = () => {
-    setOpenModal(false)
-    setTimeout(() => {
-      navigate("/");
-    }, 300);
-  }
+    try {
+      // Create FormData for file upload
+      const submitData = new FormData();
 
+      // Append all form fields
+      Object.keys(formData).forEach(key => {
+        if (key === 'products') {
+          submitData.append('products', JSON.stringify(formData.products));
+        } else if (key === 'companyLogo' && formData.companyLogo) {
+          submitData.append('companyLogo', formData.companyLogo);
+        } else {
+          submitData.append(key, formData[key]);
+        }
+      });
+
+      // Simulate API call (replace with your actual endpoint)
+      await fetch('/api/contact/submit', {
+        method: 'POST',
+        body: submitData
+      });
+
+      setSubmitMessage('¡Solicitud enviada exitosamente! Te contactaremos pronto.');
+
+      // Reset form
+      setFormData({
+        contactName: '',
+        companyName: '',
+        companyLogo: null,
+        email: '',
+        phone: '',
+        deliveryLocation: '',
+        products: [{ name: '', quantity: 1 }],
+        additionalNotes: ''
+      });
+
+    } catch (error) {
+      setSubmitMessage('Error al enviar la solicitud. Por favor intenta nuevamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const totalProducts = formData.products.reduce((sum, product) => sum + product.quantity, 0);
 
   return (
-    <div className="bg-beige min-h-screen px-5">
-      <h1 className="text-airbnb font-inter font-[600] text-center lg:text-[60px] sm:text-[48px] text-[30px] tracking-tighter text-nowrap">Contactanos</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-[#ffffff50] shadow-xl rounded px-8 pt-6 pb-8 mt-8"
-      >
-        <div className="flex gap-8 mb-6">
-          <div className="mb-4 flex-1">
-            <label
-              htmlFor="name"
-              className="font-inter block text-[#2C2C2C] text-sm font-bold mb-2"
-            >
-              Nombre
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-[#2C2C2C] leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-
-          <div className="mb-4 flex-1">
-            <label
-              htmlFor="email"
-              className="font-inter block text-[#2C2C2C] text-sm font-bold mb-2"
-            >
-              Correo electronico
-            </label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 text-[#2C2C2C] leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
+    <div className="min-h-screen bg-beige py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-inter font-bold text-airbnb mb-4">
+            Solicitar Presupuesto
+          </h1>
+          <p className="text-lg text-gray-700 font-inter max-w-2xl mx-auto">
+            Completa el formulario con los detalles de tu pedido y te enviaremos un presupuesto personalizado
+          </p>
         </div>
-        <div className="flex gap-8">
-          <div className="mb-6 flex-1">
-            <label
-              htmlFor="company"
-              className="font-inter block text-[#2C2C2C] text-sm font-bold mb-2"
-            >
-              Empresa
-            </label>
-            <input
-              type="text"
-              id="company"
-              name="company"
-              value={formData.company}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-[#2C2C2C] leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
+
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+
+          {/* Contact Information */}
+          <div className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-inter font-semibold text-airbnb mb-6 flex items-center">
+              <User className="w-6 h-6 mr-2" />
+              Información de Contacto
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-inter font-medium text-gray-700 mb-2">
+                  Nombre del Responsable *
+                </label>
+                <input
+                  type="text"
+                  name="contactName"
+                  value={formData.contactName}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter"
+                  placeholder="Tu nombre completo"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-inter font-medium text-gray-700 mb-2">
+                  Nombre de la Empresa *
+                </label>
+                <input
+                  type="text"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter"
+                  placeholder="Nombre de tu empresa"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-inter font-medium text-gray-700 mb-2">
+                  Email *
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter"
+                    placeholder="tu@empresa.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-inter font-medium text-gray-700 mb-2">
+                  Teléfono
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter"
+                    placeholder="+54 341 123-4567"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="mb-6 flex-1">
-            <label
-              htmlFor="logo"
-              className="font-inter block text-[#2C2C2C] text-sm font-bold mb-2"
-            >
-              Logotipo
-            </label>
 
-            <div className="flex flex-col gap-4">
-              <label
-                htmlFor="logo"
-                className="cursor-pointer text-center bg-[#f5f3f1] hover:bg-[#ece9e6] text-[#2C2C2C] text-sm font-medium py-2 rounded-lg shadow-sm border border-[#ddd] transition-colors duration-200"
-              >
-                Seleccionar archivo
+          {/* Company Logo */}
+          <div className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-inter font-semibold text-airbnb mb-6 flex items-center">
+              <Building className="w-6 h-6 mr-2" />
+              Logo de la Empresa
+            </h2>
+
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-airbnb transition-colors">
+              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <label className="cursor-pointer">
+                <span className="text-airbnb font-inter font-medium hover:underline">
+                  Subir logo de empresa
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="hidden"
+                />
               </label>
-              <span className="text-sm text-gray-400 truncate" id="file-name">Ningún archivo seleccionado</span>
+              <p className="text-sm text-gray-500 mt-2 font-inter">PNG, JPG hasta 5MB</p>
+              {formData.companyLogo && (
+                <p className="text-sm text-airbnb mt-2 font-inter font-medium">
+                  ✓ {formData.companyLogo.name}
+                </p>
+              )}
+            </div>
+          </div>
 
+          {/* Products */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl sm:text-2xl font-inter font-semibold text-airbnb flex items-center">
+                <Package className="w-6 h-6 mr-2" />
+                Productos Solicitados
+              </h2>
+              <div className="text-sm font-inter text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                Total: {totalProducts} productos
+              </div>
             </div>
 
-            <input
-              type="file"
-              id="logo"
-              name="logo"
-              className="hidden"
-              onChange={(e) => {
-                const fileName = e.target.files?.[0]?.name || 'Ningún archivo seleccionado';
-                document.getElementById("file-name").textContent = fileName;
-              }}
-              
-            />
-          </div>
-        </div>
-          <div className="my-6">
-            <label
-              htmlFor="orderDetails"
-              className="font-inter block text-[#2C2C2C] text-sm text-center font-bold mb-2"
+            {formData.products.map((product, index) => (
+              <div key={index} className="flex gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    placeholder="Nombre del producto"
+                    value={product.name}
+                    onChange={(e) => handleProductChange(index, 'name', e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter"
+                  />
+                </div>
+                <div className="w-32">
+                  <input
+                    type="number"
+                    placeholder="Cantidad"
+                    min="1"
+                    value={product.quantity}
+                    onChange={(e) => handleProductChange(index, 'quantity', parseInt(e.target.value) || 1)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter text-center"
+                  />
+                </div>
+                {formData.products.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeProduct(index)}
+                    className="p-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addProduct}
+              className="flex items-center gap-2 px-4 py-2 text-airbnb border border-airbnb rounded-lg hover:bg-airbnb hover:text-white transition-colors font-inter font-medium"
             >
-              Detalles del Pedido
-            </label>
-            <input
-              type="text"
-              id="orderDetails"
-              name="orderDetails"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-[#2C2C2C] leading-tight focus:outline-none focus:shadow-outline"
-              
+              <Plus className="w-5 h-5" />
+              Agregar Producto
+            </button>
+          </div>
+
+          {/* Delivery Location */}
+          <div className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-inter font-semibold text-airbnb mb-6 flex items-center">
+              <MapPin className="w-6 h-6 mr-2" />
+              Ubicación de Entrega
+            </h2>
+
+            <textarea
+              name="deliveryLocation"
+              value={formData.deliveryLocation}
+              onChange={handleInputChange}
+              required
+              rows={3}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter resize-none"
+              placeholder="Dirección completa para la entrega (calle, número, ciudad, provincia, código postal)"
             />
           </div>
 
-        <div className="flex justify-center">
+          {/* Additional Notes */}
+          <div className="mb-8">
+            <label className="block text-sm font-inter font-medium text-gray-700 mb-2">
+              Notas Adicionales
+            </label>
+            <textarea
+              name="additionalNotes"
+              value={formData.additionalNotes}
+              onChange={handleInputChange}
+              rows={4}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-airbnb focus:border-airbnb font-inter resize-none"
+              placeholder="Cualquier información adicional sobre tu pedido, fechas especiales, colores específicos, etc."
+            />
+          </div>
+
+          {/* Submit Message */}
+          {submitMessage && (
+            <div className={`mb-6 p-4 rounded-lg font-inter ${submitMessage.includes('Error')
+                ? 'bg-red-50 text-red-700 border border-red-200'
+                : 'bg-green-50 text-green-700 border border-green-200'
+              }`}>
+              {submitMessage}
+            </div>
+          )}
+
+          {/* Submit Button */}
           <button
-            type="submit"
-            className="bg-[#f5f1ed] text-[#2c2c2c] font-[500] py-2 px-4 rounded shadow-lg transition hover:bg-[#f0eeec]"
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-full bg-airbnb text-white py-4 px-6 rounded-lg font-inter font-semibold text-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <Loader className="animate-spin [animation-duration:2s]"></Loader> : "Enviar"}
+            {isSubmitting ? 'Enviando...' : 'Enviar Solicitud de Presupuesto'}
           </button>
+
+          <p className="text-sm text-gray-600 mt-4 text-center font-inter">
+            * Campos obligatorios. Te responderemos dentro de 24 horas.
+          </p>
         </div>
-      </form>
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <div className="flex-col items-center">
-          <div className="flex-col items-center text-center px-4">
-            <h3 className="font-inter text-2xl font-bold mb-2">Recibimos tu Pedido</h3>
-            <p className="font-inter mb-4 text-gray-800">
-              Revisa tu bandeja de entrada <br /> para la confirmacion del pedido.
-            </p>
-          </div>
-          <div className="flex gap-4 justify-center">
-            <button
-              className="bg-[#faf9f8] text-[#2c2c2c] font-[500] py-2 px-4 rounded shadow-lg transition hover:bg-[#f0eeec]"
-              onClick={handleCloseModal}
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </Modal>
+      </div>
     </div>
   );
 };
 
-export default Contact;
+export default ContactForm;

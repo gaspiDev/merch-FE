@@ -6,3 +6,8 @@
     --color-airbnb: #ff5a5f;
     --color-beige: #fdfff3;
 }
+
+@theme {
+  --breakpoint-mm: 375px;
+  --breakpoint-ml: 425;
+}
