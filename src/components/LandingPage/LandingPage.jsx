@@ -7,9 +7,16 @@ const LandingPage = () => {
 
     return (
         <div className="bg-beige flex flex-col justify-center items-center pt-10">
-            <div className="w-full px-1">
-                <h1 className="text-airbnb font-inter font-semibold text-center text-2xl tracking-tighter mb-1">Impulsa tu marca <br /> con productos personalizados</h1>
-                <p className="text-airbnb font-inter tracking-tight text-center font-medium text-md mb-30">Regalos empresariales que generan conexión <br />y recuerdan tu marca</p>
+            <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 max-w-4xl mx-auto">
+                <h1 className="text-airbnb font-inter font-semibold text-center tracking-tighter mb-4 sm:mb-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight">
+                    Impulsa tu marca <br className="hidden sm:block" />
+                    <span className="sm:hidden"> </span>con productos personalizados
+                </h1>
+
+                <p className="text-airbnb font-inter tracking-tight text-center font-medium mb-8 sm:mb-12 lg:mb-16 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto">
+                    Regalos empresariales que generan conexión <br className="hidden sm:block" />
+                    <span className="sm:hidden"> </span>y recuerdan tu marca
+                </p>
             </div>
             <Carousel />
             <Link
