@@ -25,9 +25,10 @@ const LandingPage = () => {
                 </div>
                 <Link
                     to="events"
+                    offset={-70}
                     smooth={true}
                     duration={1000}
-                    className="flex flex-col items-center text-airbnb font-inter font-semibold text-lg sm:text-2xl tracking-tighterx cursor-pointer animate-bounce mb-8 sm:mb-12"
+                    className="flex flex-col items-center text-airbnb font-inter font-semibold text-lg sm:text-2xl tracking-tighterx cursor-pointer animate-bounce"
                 >
                     <ChevronsDown size={32} />
                     Próximos Eventos
