@@ -70,13 +70,6 @@ const LandingPage = () => {
                         ¡Reserva tu cupo!
                     </a>
                 </div>
-                <div className="flex-1 flex justify-center items-center">
-                    <img
-                        src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80"
-                        alt="Networking Empresarial"
-                        className="w-full max-w-xs md:max-w-sm lg:max-w-md h-56 md:h-72 lg:h-80 object-cover rounded-2xl shadow-xl"
-                    />
-                </div>
             </section>
         </div>
     )
