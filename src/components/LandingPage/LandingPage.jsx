@@ -6,11 +6,11 @@ const LandingPage = () => {
 
     return (
         <div
-            className="bg-beige flex flex-col justify-center items-center px-2 sm:px-4 md:px-8 w-full"
-            style={{ minHeight: 'calc(100vh - 4rem)' }} // Adjust '4rem' to your header height
+            className="bg-beige flex flex-col items-center px-2 sm:px-4 md:px-8 w-full"
+            style={{ minHeight: 'calc(100vh - rem)' }} // Adjust '4rem' to your header height
         >
-            <div className="bg-beige flex flex-col justify-center items-center px-2 sm:px-4 md:px-8 w-full min-h-screen">
-                <div className="w-full max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 pb-6 sm:pb-12 lg:pb-6">
+            <div className="flex flex-col items-center px-2 sm:px-4 md:px-8 w-full min-h-screen">
+                <div className="w-full max-w-4xl mx-auto mt-auto px-2 sm:px-6 lg:px-8 pb-6 sm:pb-12 lg:pb-6">
                     <h1 className="text-airbnb font-inter font-semibold text-center tracking-tighter mb-4 sm:mb-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight">
                         Impulsa tu marca <br className="hidden sm:block" />
                         <span className="sm:hidden"> </span>con productos personalizados
@@ -28,7 +28,7 @@ const LandingPage = () => {
                     offset={-70}
                     smooth={true}
                     duration={1000}
-                    className="flex flex-col items-center text-airbnb font-inter font-semibold text-lg sm:text-2xl tracking-tighterx cursor-pointer animate-bounce"
+                    className="flex flex-col items-center text-airbnb font-inter font-semibold text-lg sm:text-2xl tracking-tighterx cursor-pointer animate-bounce mb-auto"
                 >
                     <ChevronsDown size={32} />
                     Próximos Eventos
@@ -38,7 +38,7 @@ const LandingPage = () => {
             <section
                 id="events"
                 name="events"
-                className="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between bg-gradient-to-br from-airbnb to-red-500 p-6 sm:p-10 rounded-3xl shadow-2xl mb-10"
+                className="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between bg-gradient-to-br from-airbnb to-red-500 p-6 sm:p-10 rounded-3xl shadow-2xl mb-10 min-h-calc(100vh - 2rem)"
             >
                 <div className="flex-1 flex flex-col justify-center items-start text-beige px-0 md:px-8 mb-8 md:mb-0">
                     <h2 className="font-inter font-extrabold text-3xl sm:text-4xl md:text-5xl mb-4 leading-tight">
