@@ -30,10 +30,10 @@ const App = () => {
 
   return (
     <>
-      <header ref={headerRef} className="w-full bg-beige pb-8 sm:pb-12">
+      <header ref={headerRef} className="w-full bg-beige">
         <div className="flex items-center p-3 sm:p-4 lg:p-6 justify-between border-b-2 border-airbnb shadow-md">
           {/* Logo Section */}
-          <div className="flex items-center min-w-0 flex-1">
+          <div id="logotype" className="flex items-center min-w-0 flex-1">
             <BaggageClaim className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 text-airbnb flex-shrink-0" />
             <p className="text-airbnb text-3xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-inter font-bold tracking-tighter cursor-pointer ml-1 sm:ml-1 truncate pb-1">
               merch
@@ -44,13 +44,13 @@ const App = () => {
           <div className="flex items-center ml-4">
             <button
               onClick={() => setOpenMenu(!openMenu)}
-              className="flex items-center justify-center p-2 rounded-lg hover:bg-airbnb hover:bg-opacity-10 transition-colors duration-200"
+              className="flex items-center justify-center p-2 rounded-lg transition-colors duration-200"
               aria-label="Toggle menu"
             >
               {!openMenu ? (
-                <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-airbnb" />
+                <Menu className="w-6 h-6 text-airbnb sm:w-7 sm:h-7  transition-colors duration-200" />
               ) : (
-                <X className="w-6 h-6 sm:w-7 sm:h-7 text-airbnb" />
+                <X className="w-6 h-6 sm:w-7 sm:h-7 text-airbnb transition-colors duration-200" />
               )}
             </button>
           </div>
@@ -77,7 +77,7 @@ const App = () => {
       <main className="bg-beige">
         <Outlet></Outlet>
       </main>
-      <footer className="bg-airbnb text-beige w-full">
+      <footer className="bg-gradient-to-br from-airbnb to-red-500 text-beige w-full">
         {/* Main Footer Content */}
         <div className="px-4 py-6 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
@@ -93,19 +93,6 @@ const App = () => {
               <p className="text-beige text-sm sm:text-base opacity-90 mb-4 leading-relaxed">
                 Tu tienda de merchandising personalizado. Calidad premium para tus productos únicos.
               </p>
-
-              {/* Social Media */}
-              <div className="flex space-x-4">
-                <a href="#" className="text-beige hover:text-white transition-colors duration-200">
-                  
-                </a>
-                <a href="#" className="text-beige hover:text-white transition-colors duration-200">
-                  
-                </a>
-                <a href="#" className="text-beige hover:text-white transition-colors duration-200">
-                  
-                </a>
-              </div>
             </div>
 
             {/* Navigation */}
@@ -190,9 +177,6 @@ const App = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
             <p className="text-beige text-xs sm:text-sm opacity-80 text-center sm:text-left">
               © {currentYear} Merch. Todos los derechos reservados.
-            </p>
-            <p className="text-beige text-xs sm:text-sm opacity-80 text-center sm:text-right">
-              Diseñado con ❤️ en Rosario
             </p>
           </div>
         </div>

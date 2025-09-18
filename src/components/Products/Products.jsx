@@ -219,7 +219,7 @@ const Products = () => {
                                 <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
                                     {product.name}
                                 </h3>
-                                <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                <span className="text-sm bg-[#ff5a6025] text-[#ff5a60] px-2 py-1 rounded-full">
                                     {product.category}
                                 </span>
                             </div>
@@ -230,7 +230,7 @@ const Products = () => {
                                 <span className="text-xl font-bold text-green-600">
                                     ${product.price}
                                 </span>
-                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm">
+                                <button className="px-4 py-2 bg-airbnb text-white rounded-md transition-colors text-sm">
                                     Add to Cart
                                 </button>
                             </div>
